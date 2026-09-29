@@ -1,0 +1,22 @@
+# ---- 编译产物 ----
+# 9 个 Windows 可执行文件共 384MB，绝不能进仓库
+/bin/
+*.exe
+
+# ---- 运行时日志 ----
+/logs/
+*.log
+
+# ---- 前端依赖与构建产物 ----
+# node_modules 有 12747 个文件 / 141MB
+web/node_modules/
+web/dist/
+
+# ---- 编辑器 ----
+.idea/
+.vscode/
+!.vscode/extensions.json
+
+# ---- 系统 ----
+.DS_Store
+Thumbs.db

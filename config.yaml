@@ -1,0 +1,106 @@
+env: dev
+
+mysql:
+  dsn: "root:root123@tcp(127.0.0.1:13306)/%s?charset=utf8mb4&parseTime=True&loc=Local&timeout=3s&readTimeout=5s&writeTimeout=5s"
+  maxIdleConns: 10
+  maxOpenConns: 50
+  connMaxLifetimeSeconds: 3600
+  slowThresholdMs: 200
+
+redis:
+  addr: "127.0.0.1:16379"
+  password: ""
+  db: 0
+  poolSize: 300
+  minIdleConns: 30
+  dialTimeoutMs: 1000
+  # 必须大于 worker.blockMs，否则 XREADGROUP 的阻塞读会被客户端读超时打断
+  readTimeoutMs: 2000
+  writeTimeoutMs: 2000
+
+etcd:
+  endpoints:
+    - "127.0.0.1:2379"
+  dialTimeoutSeconds: 3
+
+# 各服务监听端口
+server:
+  user:
+    host: "127.0.0.1"
+    port: 9001
+  product:
+    host: "127.0.0.1"
+    port: 9002
+  stock:
+    host: "127.0.0.1"
+    port: 9003
+  cart:
+    host: "127.0.0.1"
+    port: 9004
+  seckill:
+    host: "127.0.0.1"
+    port: 9005
+  order:
+    host: "127.0.0.1"
+    port: 9006
+  gateway:
+    host: "127.0.0.1"
+    port: 8080
+
+seckill:
+  # 活动快照在 Redis 中的冗余 TTL（秒），会叠加在 end_time 之上
+  snapshotTTLBufferSeconds: 60
+  # 秒杀商品在购物车中的数量（恒为 1）
+  cartMaxQty: 1
+
+cart:
+  # 普通加购的单商品数量上限
+  maxPerItem: 99
+  # 购物车 key TTL（秒）
+  ttlSeconds: 604800
+
+order:
+  # 待支付订单超时时长（秒）。演示验证释放逻辑时可改成 3
+  payTimeoutSeconds: 900
+  # 延时队列扫描间隔（毫秒）
+  delayScanIntervalMs: 200
+
+# Redis 令牌桶限流参数
+ratelimit:
+  # 全局兜底
+  global:
+    capacity: 5000
+    ratePerSecond: 3000
+  # 商品维度：capacity = stock * capacityFactor
+  activity:
+    enabled: true
+    capacityFactor: 1.5
+    # rate = capacity / activityDurationSeconds * rateFactor
+    rateFactor: 3.0
+    # 兜底值（活动快照缺失时使用）
+    fallbackCapacity: 200
+    fallbackRate: 100
+  # 用户维度
+  user:
+    enabled: true
+    capacity: 5
+    ratePerSecond: 1
+  # Redis 异常时是否放行（Fail-Open）
+  failOpen: true
+
+cron:
+  # 商品同步周期（robfig/cron 表达式，6 段含秒）
+  syncSpec: "*/30 * * * * *"
+  # 对账任务周期
+  reconcileSpec: "0 * * * * *"
+  # 启动时是否立即全量预热
+  warmUpOnStart: true
+
+worker:
+  consumerName: "worker-1"
+  # Stream 批量读取条数
+  batchSize: 100
+  # 阻塞读时长，必须小于 redis.readTimeoutMs
+  blockMs: 1000
+  # 单个事件最大重试次数，超过进死信
+  maxRetry: 3

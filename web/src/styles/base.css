@@ -1,0 +1,327 @@
+/* ==========================================================================
+   全局基础层：重置 + 管理台原子类
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-700);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+dl,
+dd {
+  margin: 0;
+}
+
+a {
+  color: var(--brand-600);
+  text-decoration: none;
+}
+
+/* 等宽：订单号 / ID / 路径 / 时间戳专用，让"机器数据"和"人读文案"分层 */
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.text-muted {
+  color: var(--ink-500);
+}
+
+.text-soft {
+  color: var(--ink-400);
+}
+
+.text-brand {
+  color: var(--brand-600);
+}
+
+.text-green {
+  color: var(--green-600);
+}
+
+.text-danger {
+  color: var(--danger);
+}
+
+.text-strike {
+  color: var(--ink-400);
+  text-decoration: line-through;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+/* ---- 页面容器 ---- */
+.app-page {
+  padding: 14px;
+}
+
+/* ---- 白卡：管理台唯一的内容载体 ---- */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.card + .card {
+  margin-top: 12px;
+}
+
+.card__hd {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--line-2);
+}
+
+.card__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-900);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/* 标题左侧的蓝绿渐变竖条：整个界面里唯一的"品牌花纹" */
+.card__title::before {
+  content: '';
+  width: 3px;
+  height: 14px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--brand-600), var(--green-600));
+}
+
+.card__extra {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card__bd {
+  padding: 16px;
+}
+
+.card__bd--flush {
+  padding: 4px 0 0;
+}
+
+/* ---- 搜索区：仿 gin-vue-admin 的查询条 ---- */
+.search-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px 0;
+}
+
+.search-bar .el-form-item {
+  margin: 0 16px 12px 0;
+}
+
+.search-bar__actions {
+  margin-bottom: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+/* ---- 工具条：查询下面的操作按钮行 ---- */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px 0;
+}
+
+.toolbar__fill {
+  flex: 1;
+}
+
+/* ---- 表格内的行内操作 ---- */
+.op-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+}
+
+.op-links .el-button.is-link + .el-button.is-link {
+  margin-left: 0;
+}
+
+/* ---- 统计卡（仪表盘） ---- */
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform var(--t-fast) var(--ease),
+    box-shadow var(--t-fast) var(--ease);
+}
+
+.stat:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.stat__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  font-size: 22px;
+  background: var(--brand-50);
+  color: var(--brand-600);
+}
+
+.stat--green .stat__icon {
+  background: var(--green-50);
+  color: var(--green-600);
+}
+
+.stat--amber .stat__icon {
+  background: var(--warning-50);
+  color: var(--warning);
+}
+
+.stat--rose .stat__icon {
+  background: var(--danger-50);
+  color: var(--danger);
+}
+
+.stat__label {
+  font-size: 13px;
+  color: var(--ink-500);
+}
+
+.stat__value {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--ink-900);
+}
+
+.stat__value small {
+  font-size: 13px;
+  color: var(--ink-400);
+  margin-left: 2px;
+  font-family: var(--font-sans);
+}
+
+/* ---- 控制台输出（系统工具） ---- */
+.console {
+  max-height: 260px;
+  overflow: auto;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  background: #fbfcfe;
+  border: 1px solid var(--line-2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.9;
+}
+
+.console__line {
+  display: flex;
+  gap: 10px;
+}
+
+.console__at {
+  flex: none;
+  color: var(--ink-400);
+}
+
+.console__line--ok .console__text {
+  color: var(--green-600);
+}
+
+.console__line--err .console__text {
+  color: var(--danger);
+}
+
+.console__line--info .console__text {
+  color: var(--ink-600);
+}
+
+/* ---- 页面切换：轻微上浮，不做花哨过场 ---- */
+.page-enter-active,
+.page-leave-active {
+  transition:
+    opacity 0.2s var(--ease),
+    transform 0.2s var(--ease);
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.page-leave-to {
+  opacity: 0;
+}
+
+/* ---- 滚动条：细、浅、不抢视线 ---- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d3d9e2;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-300);
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

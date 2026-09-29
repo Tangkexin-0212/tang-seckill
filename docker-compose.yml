@@ -1,0 +1,56 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: sk-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      TZ: Asia/Shanghai
+    ports:
+      # 本机可能已有 MySQL 占用 3306，这里用 13306 保持环境隔离
+      - "13306:3306"
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d:ro
+      - sk-mysql-data:/var/lib/mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot123"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  redis:
+    image: redis:7-alpine
+    container_name: sk-redis
+    restart: unless-stopped
+    ports:
+      # 同理，避免与本机 Redis 冲突
+      - "16379:6379"
+    command: ["redis-server", "--appendonly", "yes", "--save", ""]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  etcd:
+    # bitnami 已下线 docker.io 免费镜像，改用官方 legacy 仓库
+    image: bitnamilegacy/etcd:3.5.5
+    container_name: sk-etcd
+    restart: unless-stopped
+    environment:
+      ALLOW_NONE_AUTHENTICATION: "yes"
+      ETCD_ADVERTISE_CLIENT_URLS: http://0.0.0.0:2379
+      ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
+    ports:
+      - "2379:2379"
+    healthcheck:
+      test: ["CMD", "etcdctl", "endpoint", "health"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  sk-mysql-data:

@@ -1,0 +1,163 @@
+/* ==========================================================================
+   Element Plus 主题覆盖
+   --------------------------------------------------------------------------
+   只在"设计令牌 → EP 变量"这一层做映射，尽量不去改组件内部样式；
+   少数必须动的（导航选中、表格头、卡片）在下面单独列，并写明意图。
+   本文件必须在 element-plus/dist/index.css 之后引入。
+   ========================================================================== */
+
+:root {
+  /* ---- 主色：蓝 ---- */
+  --el-color-primary: var(--brand-600);
+  --el-color-primary-light-3: var(--brand-400);
+  --el-color-primary-light-5: var(--brand-300);
+  --el-color-primary-light-7: var(--brand-200);
+  --el-color-primary-light-8: var(--brand-100);
+  --el-color-primary-light-9: var(--brand-50);
+  --el-color-primary-dark-2: var(--brand-700);
+
+  /* ---- 成功：绿 ---- */
+  --el-color-success: var(--green-600);
+  --el-color-success-light-3: var(--green-500);
+  --el-color-success-light-5: var(--green-300);
+  --el-color-success-light-7: var(--green-100);
+  --el-color-success-light-8: #e6f7ef;
+  --el-color-success-light-9: var(--green-50);
+  --el-color-success-dark-2: var(--green-700);
+
+  --el-color-danger: var(--danger);
+  --el-color-warning: var(--warning);
+
+  /* ---- 文本与描边 ---- */
+  --el-text-color-primary: var(--ink-900);
+  --el-text-color-regular: var(--ink-700);
+  --el-text-color-secondary: var(--ink-500);
+  --el-text-color-placeholder: var(--ink-400);
+  --el-border-color: var(--line);
+  --el-border-color-light: var(--line-2);
+  --el-border-color-lighter: var(--line-2);
+  --el-fill-color-blank: #fff;
+  --el-fill-color-light: var(--bg-soft);
+  --el-fill-color-lighter: #fcfdfe;
+  --el-bg-color-page: var(--bg-page);
+
+  --el-border-radius-base: var(--radius);
+  --el-font-family: var(--font-sans);
+  --el-font-size-base: 14px;
+  --el-box-shadow-light: var(--shadow);
+}
+
+/* ---- 表格：管理台的核心工作面。表头浅灰 + 行悬浮淡蓝，不用斑马纹（斑马纹 12 列以上会晕）---- */
+.el-table {
+  --el-table-header-bg-color: #f7f9fc;
+  --el-table-header-text-color: var(--ink-600);
+  --el-table-border-color: var(--line-2);
+  --el-table-row-hover-bg-color: var(--bg-hover);
+  font-size: 13px;
+}
+
+.el-table th.el-table__cell {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.el-table .cell {
+  line-height: 1.6;
+}
+
+/* 行内操作列：全部用文字链，避免按钮墙 */
+.el-table .op-links .el-button.is-link {
+  padding: 0 0 0 0;
+  margin-right: 0;
+  height: auto;
+  font-weight: 400;
+}
+
+/* ---- 卡片 ---- */
+.el-card {
+  --el-card-border-color: var(--line);
+  --el-card-border-radius: var(--radius-lg);
+  --el-card-padding: 0;
+  overflow: visible;
+}
+
+/* ---- 主按钮：加一点蓝青渐变，避免纯色大按钮的呆板 ---- */
+.el-button--primary:not(.is-link):not(.is-text) {
+  background-image: linear-gradient(180deg, #3d90ff, var(--brand-600));
+  border-color: var(--brand-600);
+  box-shadow: 0 1px 2px rgba(22, 119, 255, 0.24);
+}
+
+.el-button--primary:not(.is-link):not(.is-text):hover {
+  background-image: linear-gradient(180deg, #5aa2ff, var(--brand-500));
+  border-color: var(--brand-500);
+}
+
+.el-button--success:not(.is-link):not(.is-text) {
+  background-image: linear-gradient(180deg, #2fc186, var(--green-600));
+  border-color: var(--green-600);
+  box-shadow: 0 1px 2px rgba(24, 160, 88, 0.22);
+}
+
+/* ---- 输入/选择：白色描边更轻，聚焦时蓝圈更明确 ---- */
+.el-input__wrapper,
+.el-select__wrapper,
+.el-textarea__inner {
+  box-shadow: 0 0 0 1px var(--line) inset;
+}
+
+.el-input__wrapper.is-focus,
+.el-select__wrapper.is-focused,
+.el-textarea__inner:focus {
+  box-shadow: 0 0 0 1px var(--brand-600) inset;
+}
+
+/* ---- 分页：右对齐、无边框按钮 ---- */
+.el-pagination {
+  --el-pagination-font-size: 13px;
+  justify-content: flex-end;
+  padding: 12px 0 0;
+}
+
+/* ---- 标签页（内容区内的 el-tabs）：顶部细线，选中蓝色加粗 ---- */
+.el-tabs--border-card > .el-tabs__header {
+  background: var(--bg-soft);
+}
+
+/* ---- 对话框：圆角收紧，头部加底分割线（gin-vue-admin 观感）---- */
+.el-dialog {
+  --el-dialog-border-radius: var(--radius-lg);
+}
+
+.el-dialog__header {
+  margin-right: 0;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line-2);
+}
+
+.el-dialog__body {
+  padding: 18px 20px;
+}
+
+.el-dialog__footer {
+  padding-top: 14px;
+  border-top: 1px solid var(--line-2);
+}
+
+/* ---- 消息提示：贴顶居中、扁平化 ---- */
+.el-message {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* ---- 描述列表：用于详情页档案区 ---- */
+.el-descriptions__label.el-descriptions__cell.is-bordered-label {
+  background: var(--bg-soft);
+  color: var(--ink-600);
+  font-weight: 500;
+}
+
+/* ---- 进度条：库存刻度的语义色由业务侧通过 color 决定，这里只统一厚度 ---- */
+.el-progress-bar__outer {
+  background-color: var(--ink-100);
+}
